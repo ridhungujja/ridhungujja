@@ -424,9 +424,11 @@ def spotify_card(track, t):
     image to the full column. A single flat <img> keeps the card clickable and
     the right size, so it wears Spotify's dark palette in both themes.
     """
-    W, H = 432, 96
+    # CARD is the drawn width; the canvas is wider so the pair never touches.
+    CARD, GUTTER, H = 400, 16, 96
+    W = CARD + GUTTER
     art = 68
-    o = [f'<rect x="0.5" y="0.5" width="{W-1}" height="{H-1}" rx="12" '
+    o = [f'<rect x="0.5" y="0.5" width="{CARD-1}" height="{H-1}" rx="12" '
          f'fill="{SPOTIFY_BG}" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>']
 
     o.append(f'<clipPath id="c"><rect x="14" y="14" width="{art}" height="{art}" rx="8"/></clipPath>')
@@ -436,11 +438,8 @@ def spotify_card(track, t):
     title = track["title"]
     if len(title) > 24:
         title = title[:23].rstrip() + "\u2026"
-    o.append(text(96, 39, title, size=15, fill=SPOTIFY_TEXT, weight=600))
-    o.append(text(96, 57, track["artist"], size=12.5, fill=SPOTIFY_MUTED))
-    o.append(f'<circle cx="99.5" cy="71" r="3.5" fill="{SPOTIFY_GREEN}"/>')
-    o.append(text(109, 75, f'from {track["playlist"]}', size=10.5,
-                  fill=SPOTIFY_MUTED, family=MONO))
+    o.append(text(96, 45, title, size=15, fill=SPOTIFY_TEXT, weight=600))
+    o.append(text(96, 65, track["artist"], size=12.5, fill=SPOTIFY_MUTED))
 
     # Right-hand visualiser. SMIL is the only animation GitHub's image proxy
     # passes through, so the bars are keyframed rather than scripted.
@@ -451,7 +450,7 @@ def spotify_card(track, t):
     ]
     base = 72
     for i, vals in enumerate(bars):
-        x = 330 + i * 8.6
+        x = 300 + i * 8.6
         hs = ",".join(str(v) for v in (*vals, vals[0]))
         ys = ",".join(str(base - v) for v in (*vals, vals[0]))
         o.append(

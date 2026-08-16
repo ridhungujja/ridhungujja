@@ -82,9 +82,9 @@ BRAND = {
 # which a README can't run because GitHub strips JavaScript.
 BMC_URL = (
     "https://img.buymeacoffee.com/button-api/"
-    "?text=Pickleball%20%2B%20Eats&emoji=%F0%9F%8C%AF&slug=ridhungujja"
-    "&button_colour=FF5F5F&font_colour=ffffff&font_family=Bree"
-    "&outline_colour=000000&coffee_colour=FFDD00"
+    "?text=Pickleball%20%20%26%20Eats%3F%3F&emoji=%F0%9F%8C%AF&slug=ridhungujja"
+    "&button_colour=225376&font_colour=ffffff&font_family=Lato"
+    "&outline_colour=ffffff&coffee_colour=FFDD00"
 )
 BMC_CROP = 200
 
@@ -108,6 +108,10 @@ def fetch_bmc():
         end = body.find("</g>", start)
         body = body[:start] + body[end + 4:]
     body = re.sub(r'<text[^>]*\sx="2\d\d"[^>]*>.*?</text>', "", body, flags=re.S)
+    # Their API drops the button text in raw, so an "&" in it lands unescaped and
+    # the SVG stops being well-formed. Escaping bare ampersands keeps the literal
+    # "&" on the button instead of forcing a reworded label.
+    body = re.sub(r"&(?!#?\w+;)", "&amp;", body)
     body = body.replace('width="253"', f'width="{BMC_CROP}"', 1)
     body = body.replace('viewBox="0 0 253 50"', f'viewBox="0 0 {BMC_CROP} 50"')
     body = body.replace('<svg height="50"', f'<svg height="50" width="{BMC_CROP}"', 1)

@@ -83,7 +83,7 @@ Open to research assistant work in empirical finance or econometrics.
 
 ## On repeat
 
-<a href="https://open.spotify.com/track/1zzejMGRYKP5XOa3FmzXfa"><img alt="Katchi Sera by Sai Abhyankkar, from southies" src="assets/spotify-1.svg" width="416"></a><a href="https://open.spotify.com/track/7H7NyZ3G075GqPx2evsfeb"><img alt="Chamber Of Reflection by Mac DeMarco, from cash curious 💰💸" src="assets/spotify-2.svg" width="416"></a>
+<a href="https://open.spotify.com/track/1zzejMGRYKP5XOa3FmzXfa"><img alt="Katchi Sera by Sai Abhyankkar" src="assets/spotify-1.svg" width="416"></a><a href="https://open.spotify.com/track/7H7NyZ3G075GqPx2evsfeb"><img alt="Chamber Of Reflection by Mac DeMarco" src="assets/spotify-2.svg" width="416"></a>
 
 ## Elsewhere
 
