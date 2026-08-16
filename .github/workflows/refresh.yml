@@ -38,7 +38,24 @@ jobs:
       - name: Redraw the figures
         run: python3 assets/make_assets.py
 
-      - name: Commit if anything moved
+      # The clock changes on every single run, so committing it to main would
+      # add ~48 bot commits a day to the history forever. It gets its own
+      # orphan branch instead — the same trick the snake uses — leaving main to
+      # record only real changes in the underlying data.
+      - name: Stage the clock
+        run: |
+          mkdir -p dist
+          cp assets/clock-light.svg assets/clock-dark.svg dist/
+
+      - name: Publish the clock
+        uses: crazy-max/ghaction-github-pages@v4
+        with:
+          target_branch: clock-output
+          build_dir: dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit the data-driven figures if anything moved
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

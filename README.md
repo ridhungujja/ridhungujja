@@ -4,8 +4,8 @@
 </picture>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/clock-dark.svg">
-  <img alt="Local time in Wilmington, DE" src="assets/clock-light.svg" width="220">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/ridhungujja/ridhungujja/clock-output/clock-dark.svg">
+  <img alt="Local time in Wilmington, DE" src="https://raw.githubusercontent.com/ridhungujja/ridhungujja/clock-output/clock-light.svg" width="220">
 </picture>
 
 I'm a high school student working on empirical finance questions — mostly the kind
