@@ -82,7 +82,7 @@ BRAND = {
 # which a README can't run because GitHub strips JavaScript.
 BMC_URL = (
     "https://img.buymeacoffee.com/button-api/"
-    "?text=Pickleball%20%20%26%20Eats%3F%3F&emoji=%F0%9F%8C%AF&slug=ridhungujja"
+    "?text=Buy%20me%20food&emoji=%F0%9F%8C%AF&slug=ridhungujja"
     "&button_colour=225376&font_colour=ffffff&font_family=Lato"
     "&outline_colour=ffffff&coffee_colour=FFDD00"
 )

@@ -89,10 +89,6 @@ Open to research assistant work in empirical finance or econometrics.
 
 <a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=ridhung@gmail.com" title="Gmail"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/tiles/gmail-dark.svg"><img src="assets/tiles/gmail-light.svg" height="48" alt="Gmail"></picture></a><a href="https://github.com/ridhungujja" title="GitHub"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/tiles/github-dark.svg"><img src="assets/tiles/github-light.svg" height="48" alt="GitHub"></picture></a><a href="https://www.linkedin.com/in/ridhungujja/" title="LinkedIn"><img src="assets/tiles/linkedin-light.svg" height="48" alt="LinkedIn"></a><a href="https://www.instagram.com/ridhungujja/" title="Instagram"><img src="assets/tiles/instagram-light.svg" height="48" alt="Instagram"></a><a href="https://open.spotify.com/user/31r66silw2padp74yudatltdy4gm" title="Spotify"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/tiles/spotify-dark.svg"><img src="assets/tiles/spotify-light.svg" height="48" alt="Spotify"></picture></a>
 
-```
-ridhung@gmail.com
-```
-
 <a href="https://www.buymeacoffee.com/ridhungujja">
-  <img alt="Pickleball + Eats" height="46" src="assets/bmc-button.svg">
+  <img alt="Buy me food" height="46" src="assets/bmc-button.svg">
 </a>
