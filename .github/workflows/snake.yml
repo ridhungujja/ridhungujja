@@ -1,12 +1,11 @@
 name: Generate contribution snake
 
+# The snake is off the README for now, so this only runs when asked. To bring it
+# back: uncomment the schedule and re-add the picture block pointing at
+# raw.githubusercontent.com/<user>/<user>/snake-output/github-snake{,-dark}.svg
 on:
-  schedule:
-    - cron: "0 */12 * * *"
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/snake.yml"
+  # schedule:
+  #   - cron: "0 */12 * * *"
   workflow_dispatch:
 
 permissions:
