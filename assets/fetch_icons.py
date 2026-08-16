@@ -99,24 +99,50 @@ def get(url):
 
 
 def fetch_bmc():
+    """Vendor the button with its supporter counter trimmed off.
+
+    Everything here is measured from the fetched file rather than hardcoded:
+    the button's width and the counter's offset both change with the label, so
+    fixed numbers silently leave the heart behind and squash the artwork.
+    """
     body = get(BMC_URL)
     if not body:
         print("  !! could not fetch the Buy Me a Coffee button")
         return
-    start = body.find('<g transform="translate(1,0)">')
-    if start != -1:
-        end = body.find("</g>", start)
-        body = body[:start] + body[end + 4:]
-    body = re.sub(r'<text[^>]*\sx="2\d\d"[^>]*>.*?</text>', "", body, flags=re.S)
+
     # Their API drops the button text in raw, so an "&" in it lands unescaped and
     # the SVG stops being well-formed. Escaping bare ampersands keeps the literal
     # "&" on the button instead of forcing a reworded label.
     body = re.sub(r"&(?!#?\w+;)", "&amp;", body)
-    body = body.replace('width="253"', f'width="{BMC_CROP}"', 1)
-    body = body.replace('viewBox="0 0 253 50"', f'viewBox="0 0 {BMC_CROP} 50"')
-    body = body.replace('<svg height="50"', f'<svg height="50" width="{BMC_CROP}"', 1)
+
+    full = re.search(r'viewBox="0 0 ([\d.]+) ([\d.]+)"', body)
+    width, height = (float(full.group(1)), float(full.group(2))) if full else (253.0, 50.0)
+
+    # The counter lives in a translated group whose first path starts at the
+    # divider; that x plus the group's offset is where the button really ends.
+    crop = width
+    g = re.search(r'<g transform="translate\(([\d.-]+),\s*[\d.-]+\)"\s*>', body)
+    if g:
+        start = g.start()
+        end = body.find("</g>", start)
+        inner = body[start:end]
+        edge = re.search(r'\sd="M([\d.]+)', inner)
+        if edge:
+            crop = float(edge.group(1)) + float(g.group(1))
+        body = body[:start] + body[end + 4:]
+
+    # any leftover count sitting past the new edge
+    body = re.sub(r'<text[^>]*\sx="([\d.]+)"[^>]*>.*?</text>',
+                  lambda m: "" if float(m.group(1)) >= crop - 8 else m.group(0),
+                  body, flags=re.S)
+
+    crop = round(crop)
+    body = re.sub(r'(<rect[^>]*?)width="[\d.]+"', rf'\g<1>width="{crop}"', body, count=1)
+    body = body.replace(f'viewBox="0 0 {full.group(1)} {full.group(2)}"',
+                        f'viewBox="0 0 {crop} {full.group(2)}"') if full else body
+    body = re.sub(r'<svg\s', f'<svg width="{crop}" ', body, count=1)
     (ICON_DIR.parent / "bmc-button.svg").write_text(body, encoding="utf-8")
-    print("  bmc-button.svg (counter trimmed)")
+    print(f"  bmc-button.svg (counter trimmed, {crop}x{height:.0f})")
 
 
 def main():
