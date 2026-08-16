@@ -80,8 +80,10 @@ Next.js 14 · Tailwind · Framer Motion.
 [![Email](https://img.shields.io/badge/ridhung%40gmail.com-475569?style=flat-square&logo=gmail&logoColor=white)](mailto:ridhung@gmail.com)
 [![GitHub](https://img.shields.io/badge/ridhungujja-475569?style=flat-square&logo=github&logoColor=white)](https://github.com/ridhungujja)
 
+<!-- Buy Me a Coffee's button API emits the button text unescaped, so an "&" in it
+     produces invalid XML and the image fails to render. "+" stands in for it. -->
 <a href="https://www.buymeacoffee.com/ridhungujja">
-  <img alt="Pickleball & Eats" height="46" src="https://img.buymeacoffee.com/button-api/?text=Pickleball%20%26%20Eats&emoji=%F0%9F%8C%AF&slug=ridhungujja&button_colour=FF5F5F&font_colour=ffffff&font_family=Bree&outline_colour=000000&coffee_colour=FFDD00">
+  <img alt="Pickleball + Eats" height="46" src="https://img.buymeacoffee.com/button-api/?text=Pickleball%20%2B%20Eats&emoji=%F0%9F%8C%AF&slug=ridhungujja&button_colour=FF5F5F&font_colour=ffffff&font_family=Bree&outline_colour=000000&coffee_colour=FFDD00">
 </a>
 
 <sub>Every figure here is drawn from real data and redrawn on a schedule —
