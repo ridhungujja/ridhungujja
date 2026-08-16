@@ -1,0 +1,40 @@
+name: Generate contribution snake
+
+on:
+  schedule:
+    - cron: "0 */12 * * *"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/snake.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: snake
+  cancel-in-progress: true
+
+jobs:
+  snake:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Draw the snake
+        uses: Platane/snk@v3
+        id: snake
+        with:
+          github_user_name: ${{ github.repository_owner }}
+          outputs: |
+            dist/github-snake.svg
+            dist/github-snake-dark.svg?palette=github-dark
+
+      # Lives on its own branch so the generated frames never land in main's
+      # history — the README points at raw.githubusercontent for that branch.
+      - name: Publish to the snake-output branch
+        uses: crazy-max/ghaction-github-pages@v4
+        with:
+          target_branch: snake-output
+          build_dir: dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

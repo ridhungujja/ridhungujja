@@ -1,0 +1,51 @@
+name: Refresh README figures
+
+# The clock face is stamped at build time, so how often this runs is how fresh
+# the time on the profile is. GitHub throttles scheduled workflows on busy
+# runners, so treat the cron as a best effort rather than a guarantee.
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  push:
+    branches: [main]
+    paths:
+      - "assets/**"
+      - ".github/workflows/refresh.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-readme
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Pull the latest GitHub numbers
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 assets/fetch_data.py
+
+      - name: Redraw the figures
+        run: python3 assets/make_assets.py
+
+      - name: Commit if anything moved
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets
+          if git diff --staged --quiet; then
+            echo "figures unchanged"
+          else
+            git commit -m "chore: refresh README figures"
+            git push
+          fi
