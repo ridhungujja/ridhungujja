@@ -451,17 +451,19 @@ def spotify_card(track, t):
     base = 72
     for i, vals in enumerate(bars):
         x = 300 + i * 8.6
-        hs = ",".join(str(v) for v in (*vals, vals[0]))
-        ys = ",".join(str(base - v) for v in (*vals, vals[0]))
+        # SMIL value lists are semicolon separated; commas silently
+        # invalidate the whole animation and it never runs.
+        hs = ";".join(str(v) for v in (*vals, vals[0]))
+        ys = ";".join(str(base - v) for v in (*vals, vals[0]))
         o.append(
             f'<rect x="{x:.1f}" y="{base-vals[0]}" width="4.6" height="{vals[0]}" rx="2.3" '
             f'fill="{SPOTIFY_GREEN}" opacity="0.92">'
             f'<animate attributeName="height" values="{hs}" dur="1.6s" '
-            f'begin="-{i*0.17:.2f}s" repeatCount="indefinite" calcMode="spline" '
+            f'begin="{-i*0.17:.2f}s" repeatCount="indefinite" calcMode="spline" '
             f'keySplines="0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1" '
             f'keyTimes="0;0.2;0.4;0.6;0.8;1"/>'
             f'<animate attributeName="y" values="{ys}" dur="1.6s" '
-            f'begin="-{i*0.17:.2f}s" repeatCount="indefinite" calcMode="spline" '
+            f'begin="{-i*0.17:.2f}s" repeatCount="indefinite" calcMode="spline" '
             f'keySplines="0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1" '
             f'keyTimes="0;0.2;0.4;0.6;0.8;1"/></rect>')
     return svg(W, H, "\n".join(o))
