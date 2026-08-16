@@ -424,6 +424,11 @@ def clock(t, mode):
 SPOTIFY_GREEN = "#1DB954"
 
 
+SPOTIFY_BG = "#191414"      # Spotify's own black, so one card reads on either theme
+SPOTIFY_TEXT = "#FFFFFF"
+SPOTIFY_MUTED = "#B3B3B3"
+
+
 def spotify_card(track, t):
     """A track card with a looping equaliser.
 
@@ -431,11 +436,17 @@ def spotify_card(track, t):
     README. This is drawn from the public oEmbed data instead — real cover art,
     title and artist — and the bars animate through SMIL, which does survive the
     image proxy.
+
+    Deliberately not theme-split: GitHub rewrites a <picture> into its own
+    <themed-picture> element, which drops the surrounding <a> and stretches the
+    image to the full column. A single flat <img> keeps the card clickable and
+    the right size, so it wears Spotify's dark palette in both themes.
     """
     W, H = 432, 96
     art = 68
+    t = {"text": SPOTIFY_TEXT, "muted": SPOTIFY_MUTED, "faint": SPOTIFY_MUTED}
     o = [f'<rect x="0.5" y="0.5" width="{W-1}" height="{H-1}" rx="12" '
-         f'fill="{t["chip_fill"]}" stroke="{t["chip_stroke"]}" stroke-width="1"/>']
+         f'fill="{SPOTIFY_BG}" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>']
 
     o.append(f'<clipPath id="c"><rect x="14" y="14" width="{art}" height="{art}" rx="8"/></clipPath>')
     o.append(f'<image x="14" y="14" width="{art}" height="{art}" href="{track["art"]}" '
@@ -465,10 +476,9 @@ def spotify_card(track, t):
 def emit_spotify():
     data = json.loads((OUT / "spotify.json").read_text(encoding="utf-8"))
     for i, track in enumerate(data["tracks"], 1):
-        for mode, t in THEMES.items():
-            (OUT / f"spotify-{i}-{mode}.svg").write_text(
-                spotify_card(track, t), encoding="utf-8")
-    print(f"wrote {len(data['tracks'])*2} spotify cards")
+        (OUT / f"spotify-{i}.svg").write_text(
+            spotify_card(track, None), encoding="utf-8")
+    print(f"wrote {len(data['tracks'])} spotify cards")
 
 
 def main():

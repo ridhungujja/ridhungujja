@@ -79,7 +79,7 @@ Next.js 14 · Tailwind · Framer Motion.
 
 ## On repeat
 
-<a href="https://open.spotify.com/track/1zzejMGRYKP5XOa3FmzXfa"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/spotify-1-dark.svg"><img alt="Katchi Sera by Sai Abhyankkar" src="assets/spotify-1-light.svg" width="416"></picture></a><a href="https://open.spotify.com/track/7H7NyZ3G075GqPx2evsfeb"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/spotify-2-dark.svg"><img alt="Chamber Of Reflection by Mac DeMarco" src="assets/spotify-2-light.svg" width="416"></picture></a>
+<a href="https://open.spotify.com/track/1zzejMGRYKP5XOa3FmzXfa"><img alt="Katchi Sera by Sai Abhyankkar" src="assets/spotify-1.svg" width="416"></a><a href="https://open.spotify.com/track/7H7NyZ3G075GqPx2evsfeb"><img alt="Chamber Of Reflection by Mac DeMarco" src="assets/spotify-2.svg" width="416"></a>
 
 <sub>Covers and titles pulled from Spotify · out of <a href="https://open.spotify.com/playlist/0v23S8pWmoUcxv1chc8kzh">cash curious 💰💸</a></sub>
 
