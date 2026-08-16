@@ -9,6 +9,7 @@ bar uses byte counts reported by the GitHub languages API.
 
 import base64
 import json
+import re
 import math
 import random
 from datetime import datetime, timezone
@@ -100,7 +101,10 @@ STACK = [
     ("Software & Tools", ["Stata", "Git", "GitHub", "Claude Code", "pytest", "pdfplumber"]),
 ]
 
+SOCIALS = ["Gmail", "GitHub", "LinkedIn", "Instagram", "Spotify"]
+
 ICON_DIR = OUT / "icons"
+TILES = OUT / "tiles"
 MANIFEST = json.loads((ICON_DIR / "manifest.json").read_text(encoding="utf-8"))
 
 CHIP_FS = 12
@@ -112,11 +116,24 @@ TEXT_PAD = 13
 LABEL_COL = 152
 
 
+WORDMARK_H = 20  # ink height inside a plate; the logo's own ratio sets the width
+PLATE_BG = "#F4F2ED"
+PLATE_TEXT = "#1f2328"
+
+
+def _wordmark_size(spec):
+    _, _, vw, vh = (float(v) for v in spec["viewBox"].split())
+    return WORDMARK_H * vw / vh, WORDMARK_H
+
+
 def tile_width(label):
-    """Logo tiles are square; the few tools with no logo become wider name tiles."""
-    if label in MANIFEST:
-        return TILE
-    return TEXT_PAD * 2 + len(label) * CHIP_CW
+    """Square for logo tiles; a wider plate for wordmarks and for plain names."""
+    spec = MANIFEST.get(label)
+    if spec is None:
+        return TEXT_PAD * 2 + len(label) * CHIP_CW
+    if spec["kind"] == "wordmark":
+        return _wordmark_size(spec)[0] + TEXT_PAD * 2
+    return TILE
 
 
 @lru_cache(maxsize=None)
@@ -146,6 +163,17 @@ def tile_markup(label, x, y, mode, t):
         # skill-icons artwork is a complete tile already, background included.
         return (f'<image x="{x:.1f}" y="{y:.1f}" width="{TILE}" height="{TILE}" '
                 f'href="{_data_uri(spec[mode])}" preserveAspectRatio="xMidYMid meet"/>')
+
+    if spec["kind"] == "wordmark":
+        # Both vendor wordmarks are dark-inked, so they keep a light plate in
+        # either theme rather than vanishing on the dark one.
+        lw, lh = _wordmark_size(spec)
+        plate = lw + TEXT_PAD * 2
+        return (f'<rect x="{x:.1f}" y="{y:.1f}" width="{plate:.1f}" height="{TILE}" '
+                f'rx="{TILE_R}" fill="{PLATE_BG}"/>'
+                f'<image x="{x + TEXT_PAD:.1f}" y="{y + (TILE - lh) / 2:.1f}" '
+                f'width="{lw:.1f}" height="{lh:.1f}" href="{_data_uri(spec["file"])}" '
+                f'preserveAspectRatio="xMidYMid meet"/>')
 
     if spec["kind"] == "inset":
         # Matplotlib's mark is drawn in white, so it needs a dark ground in both
@@ -283,34 +311,32 @@ def langs(t, mode):
     return svg(W, H, "\n".join(o))
 
 
-def stack(t, mode):
-    W, row_h = 880, 76
-    o = []
+def slug(label):
+    return re.sub(r"[^a-z0-9]+", "-", label.lower()).strip("-")
 
-    for i, (label, items) in enumerate(STACK):
-        cy = i * row_h + row_h / 2
-        y = cy - TILE / 2
-        if i:
-            o.append(f'<line x1="0" y1="{i*row_h:.0f}" x2="{W}" y2="{i*row_h:.0f}" '
-                     f'stroke="{t["rule"]}" stroke-width="1"/>')
-        o.append(text(0, cy + 4.5, label, size=13, fill=t["muted"], weight=600))
 
-        row_w = sum(tile_width(it) for it in items) + TILE_GAP * (len(items) - 1)
-        if LABEL_COL + row_w > W:
-            raise SystemExit(f"stack row {label!r} overflows by {LABEL_COL + row_w - W:.0f}px")
+def emit_tiles():
+    """One SVG per tool, so each tile can be wrapped in its own link.
 
-        x = float(LABEL_COL)
-        for item in items:
-            w = tile_width(item)
-            if item in MANIFEST:
-                o.append(tile_markup(item, x, y, mode, t))
-            else:
-                o.append(f'<rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{TILE}" '
-                         f'rx="{TILE_R}" fill="{t["tile"]}"/>')
-                o.append(text(x + w / 2, cy + 4.3, item, size=CHIP_FS,
-                              fill=t["tile_text"], family=MONO, anchor="middle"))
-            x += w + TILE_GAP
-    return svg(W, len(STACK) * row_h, "\n".join(o))
+    A single combined figure would be tidier, but links inside an SVG are inert
+    once GitHub serves it through <img> — per-tile files are the only way to
+    make the logos click through.
+    """
+    TILES.mkdir(exist_ok=True)
+    written = []
+    for label in [i for _, items in STACK for i in items] + SOCIALS:
+        for mode, t in THEMES.items():
+            w = tile_width(label)
+            body = tile_markup(label, 0, 0, mode, t) if label in MANIFEST else (
+                f'<rect x="0" y="0" width="{w:.1f}" height="{TILE}" rx="{TILE_R}" '
+                f'fill="{PLATE_BG}"/>'
+                + text(w / 2, TILE / 2 + 4.3, label, size=CHIP_FS, fill=PLATE_TEXT,
+                       family=MONO, anchor="middle")
+            )
+            (TILES / f"{slug(label)}-{mode}.svg").write_text(
+                svg(round(w), TILE, body), encoding="utf-8")
+        written.append(label)
+    print(f"wrote {len(written)*2} tiles in assets/tiles/")
 
 
 MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -395,8 +421,60 @@ def clock(t, mode):
     return svg(W, H, "\n".join(o))
 
 
+SPOTIFY_GREEN = "#1DB954"
+
+
+def spotify_card(track, t):
+    """A track card with a looping equaliser.
+
+    GitHub strips <iframe>, so Spotify's own embed player can never render in a
+    README. This is drawn from the public oEmbed data instead — real cover art,
+    title and artist — and the bars animate through SMIL, which does survive the
+    image proxy.
+    """
+    W, H = 432, 96
+    art = 68
+    o = [f'<rect x="0.5" y="0.5" width="{W-1}" height="{H-1}" rx="12" '
+         f'fill="{t["chip_fill"]}" stroke="{t["chip_stroke"]}" stroke-width="1"/>']
+
+    o.append(f'<clipPath id="c"><rect x="14" y="14" width="{art}" height="{art}" rx="8"/></clipPath>')
+    o.append(f'<image x="14" y="14" width="{art}" height="{art}" href="{track["art"]}" '
+             f'clip-path="url(#c)" preserveAspectRatio="xMidYMid slice"/>')
+
+    o.append(text(W - 16, 30, "SPOTIFY", size=9, fill=t["faint"], family=MONO,
+                  spacing="1.6", anchor="end"))
+
+    title = track["title"]
+    if len(title) > 26:
+        title = title[:25].rstrip() + "…"
+    o.append(text(96, 44, title, size=15, fill=t["text"], weight=600))
+    o.append(text(96, 63, track["artist"], size=12.5, fill=t["muted"]))
+
+    for i in range(5):
+        x = 96 + i * 6.5
+        o.append(
+            f'<rect x="{x:.1f}" y="72" width="3.2" height="10" rx="1.6" fill="{SPOTIFY_GREEN}">'
+            f'<animate attributeName="height" values="4;11;6;12;4" dur="1.05s" '
+            f'begin="-{i*0.19:.2f}s" repeatCount="indefinite"/>'
+            f'<animate attributeName="y" values="78;71;76;70;78" dur="1.05s" '
+            f'begin="-{i*0.19:.2f}s" repeatCount="indefinite"/></rect>')
+    o.append(text(96 + 5 * 6.5 + 8, 81, "on repeat", size=10.5, fill=t["faint"], family=MONO))
+    return svg(W, H, "\n".join(o))
+
+
+def emit_spotify():
+    data = json.loads((OUT / "spotify.json").read_text(encoding="utf-8"))
+    for i, track in enumerate(data["tracks"], 1):
+        for mode, t in THEMES.items():
+            (OUT / f"spotify-{i}-{mode}.svg").write_text(
+                spotify_card(track, t), encoding="utf-8")
+    print(f"wrote {len(data['tracks'])*2} spotify cards")
+
+
 def main():
-    for name, fn in (("banner", banner), ("langs", langs), ("stack", stack),
+    emit_tiles()
+    emit_spotify()
+    for name, fn in (("banner", banner), ("langs", langs),
                      ("activity", activity), ("clock", clock)):
         for mode, theme in THEMES.items():
             path = OUT / f"{name}-{mode}.svg"
