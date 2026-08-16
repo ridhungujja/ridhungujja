@@ -18,8 +18,10 @@ USER = "ridhungujja"
 OUT = Path(__file__).parent / "data.json"
 
 # Iterations of a project that already appears under another name. Counting all
-# three podium repos would triple-count the same TypeScript.
-EXCLUDE = {"podium.2", "podium-1.0"}
+# three podium repos would triple-count the same TypeScript. The profile repo is
+# excluded too: its only code is the script that draws these figures, and
+# letting that count would inflate Python with the chart generator itself.
+EXCLUDE = {"podium.2", "podium-1.0", USER}
 
 QUERY = """
 query($login: String!) {

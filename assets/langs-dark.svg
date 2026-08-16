@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="880" height="104" viewBox="0 0 880 104" fill="none" role="img">
 <text x="0.0" y="14.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10.5" fill="#6e7681" letter-spacing="1.8">CODE BY LANGUAGE</text>
-<text x="880.0" y="14.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10.5" fill="#6e7681" text-anchor="end">588 KB · 4 public projects</text>
+<text x="880.0" y="14.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10.5" fill="#6e7681" text-anchor="end">564 KB · 3 public projects</text>
 <g>
-<rect x="0.0" y="30" width="445.2" height="24" rx="4.0" fill="#3572A5"/>
-<rect x="447.7" y="30" width="208.3" height="24" rx="4.0" fill="#3178c6"/>
-<rect x="658.5" y="30" width="132.3" height="24" rx="4.0" fill="#f1e05a"/>
-<rect x="793.3" y="30" width="48.9" height="24" rx="4.0" fill="#663399"/>
-<rect x="844.7" y="30" width="27.9" height="24" rx="4.0" fill="#e34c26"/>
-<rect x="875.1" y="30" width="4.9" height="24" rx="2.5" fill="#89e051"/>
+<rect x="0.0" y="30" width="427.1" height="24" rx="4.0" fill="#3572A5"/>
+<rect x="429.6" y="30" width="217.2" height="24" rx="4.0" fill="#3178c6"/>
+<rect x="649.3" y="30" width="138.0" height="24" rx="4.0" fill="#f1e05a"/>
+<rect x="789.8" y="30" width="51.0" height="24" rx="4.0" fill="#663399"/>
+<rect x="843.3" y="30" width="29.1" height="24" rx="4.0" fill="#e34c26"/>
+<rect x="874.9" y="30" width="5.1" height="24" rx="2.6" fill="#89e051"/>
 </g>
 <circle cx="4.0" cy="80" r="4" fill="#3572A5"/>
 <text x="15.0" y="84.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="11.5" fill="#e6edf3">Python</text>
-<text x="64.5" y="84.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="11.5" fill="#6e7681">51.3%</text>
+<text x="64.5" y="84.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="11.5" fill="#6e7681">49.2%</text>
 <circle cx="150.7" cy="80" r="4" fill="#3178c6"/>
 <text x="161.7" y="84.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="11.5" fill="#e6edf3">TypeScript</text>
-<text x="238.8" y="84.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="11.5" fill="#6e7681">24.0%</text>
+<text x="238.8" y="84.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="11.5" fill="#6e7681">25.0%</text>
 <circle cx="297.3" cy="80" r="4" fill="#f1e05a"/>
 <text x="308.3" y="84.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="11.5" fill="#e6edf3">JavaScript</text>
-<text x="385.4" y="84.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="11.5" fill="#6e7681">15.3%</text>
+<text x="385.4" y="84.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="11.5" fill="#6e7681">15.9%</text>
 <circle cx="444.0" cy="80" r="4" fill="#663399"/>
 <text x="455.0" y="84.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="11.5" fill="#e6edf3">CSS</text>
-<text x="483.7" y="84.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="11.5" fill="#6e7681">5.6%</text>
+<text x="483.7" y="84.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="11.5" fill="#6e7681">5.9%</text>
 <circle cx="590.7" cy="80" r="4" fill="#e34c26"/>
 <text x="601.7" y="84.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="11.5" fill="#e6edf3">HTML</text>
-<text x="637.3" y="84.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="11.5" fill="#6e7681">3.2%</text>
+<text x="637.3" y="84.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="11.5" fill="#6e7681">3.4%</text>
 <circle cx="737.3" cy="80" r="4" fill="#89e051"/>
 <text x="748.3" y="84.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="11.5" fill="#e6edf3">Shell</text>
 <text x="790.9" y="84.0" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="11.5" fill="#6e7681">0.6%</text>

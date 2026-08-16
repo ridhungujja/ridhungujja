@@ -3,7 +3,7 @@
  "languages": [
   {
    "name": "Python",
-   "bytes": 308852,
+   "bytes": 284146,
    "color": "#3572A5"
   },
   {
@@ -32,13 +32,13 @@
    "color": "#89e051"
   }
  ],
- "projects": 4,
+ "projects": 3,
  "stats": {
   "contributions": 123,
   "commits": 112,
-  "repos": 4,
+  "repos": 3,
   "stars": 2,
-  "bytes": 601832
+  "bytes": 577126
  },
  "weeks": [
   [
