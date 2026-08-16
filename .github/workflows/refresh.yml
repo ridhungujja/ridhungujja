@@ -62,7 +62,17 @@ jobs:
           git add assets
           if git diff --staged --quiet; then
             echo "figures unchanged"
-          else
-            git commit -m "chore: refresh README figures"
-            git push
+            exit 0
           fi
+          git commit -m "chore: refresh README figures"
+          # A scheduled run and a push-triggered run can overlap and race for
+          # main; rebase onto whatever landed first rather than failing the job.
+          for attempt in 1 2 3; do
+            if git push; then
+              exit 0
+            fi
+            echo "push rejected, rebasing (attempt $attempt)"
+            git pull --rebase --strategy-option=theirs origin main || exit 1
+          done
+          echo "could not push after 3 attempts" >&2
+          exit 1
