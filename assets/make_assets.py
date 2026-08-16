@@ -98,7 +98,7 @@ if len(_langs) > 6:
 STACK = [
     ("Languages", ["Python", "R", "SQL", "LaTeX", "JavaScript", "HTML", "CSS", "Bash"]),
     ("Libraries", ["pandas", "NumPy", "statsmodels", "SciPy", "Matplotlib", "React", "Next.js"]),
-    ("Software & Tools", ["Stata", "Git", "GitHub", "Claude Code", "pytest", "pdfplumber"]),
+    ("Software & Tools", ["Stata", "Git", "GitHub", "Claude Code", "pytest"]),
 ]
 
 SOCIALS = ["Gmail", "GitHub", "LinkedIn", "Instagram", "Spotify"]
@@ -116,30 +116,23 @@ TEXT_PAD = 13
 LABEL_COL = 152
 
 
-WORDMARK_H = 20  # ink height inside a plate; the logo's own ratio sets the width
 PLATE_BG = "#F4F2ED"
 PLATE_TEXT = "#1f2328"
-
-
-def _wordmark_size(spec):
-    _, _, vw, vh = (float(v) for v in spec["viewBox"].split())
-    return WORDMARK_H * vw / vh, WORDMARK_H
+TILE_PAD = 10  # transparent gutter baked into each tile so none of them touch
 
 
 def tile_width(label):
-    """Square for logo tiles; a wider plate for wordmarks and for plain names."""
-    spec = MANIFEST.get(label)
-    if spec is None:
+    """Square for every logo; a wider plate only for a name with no mark."""
+    if label not in MANIFEST:
         return TEXT_PAD * 2 + len(label) * CHIP_CW
-    if spec["kind"] == "wordmark":
-        return _wordmark_size(spec)[0] + TEXT_PAD * 2
     return TILE
 
 
 @lru_cache(maxsize=None)
 def _data_uri(filename):
     raw = (ICON_DIR / filename).read_bytes()
-    return "data:image/svg+xml;base64," + base64.b64encode(raw).decode()
+    mime = "image/png" if filename.endswith(".png") else "image/svg+xml"
+    return f"data:{mime};base64," + base64.b64encode(raw).decode()
 
 
 def _fitted(spec, x, y, box, fill=None):
@@ -164,24 +157,13 @@ def tile_markup(label, x, y, mode, t):
         return (f'<image x="{x:.1f}" y="{y:.1f}" width="{TILE}" height="{TILE}" '
                 f'href="{_data_uri(spec[mode])}" preserveAspectRatio="xMidYMid meet"/>')
 
-    if spec["kind"] == "wordmark":
-        # Both vendor wordmarks are dark-inked, so they keep a light plate in
-        # either theme rather than vanishing on the dark one.
-        lw, lh = _wordmark_size(spec)
-        plate = lw + TEXT_PAD * 2
-        return (f'<rect x="{x:.1f}" y="{y:.1f}" width="{plate:.1f}" height="{TILE}" '
-                f'rx="{TILE_R}" fill="{PLATE_BG}"/>'
-                f'<image x="{x + TEXT_PAD:.1f}" y="{y + (TILE - lh) / 2:.1f}" '
-                f'width="{lw:.1f}" height="{lh:.1f}" href="{_data_uri(spec["file"])}" '
-                f'preserveAspectRatio="xMidYMid meet"/>')
-
     if spec["kind"] == "inset":
-        # Matplotlib's mark is drawn in white, so it needs a dark ground in both
-        # themes — on the light tile it all but disappears.
-        inset = 32
-        return bg.format("#242938") + (
+        # A bare mark rather than a finished tile, so it gets the plate colour
+        # recorded for it: dark behind white ink, light behind dark ink.
+        inset = 30
+        return bg.format(spec["plate"]) + (
             f'<image x="{x + (TILE-inset)/2:.1f}" y="{y + (TILE-inset)/2:.1f}" '
-            f'width="{inset}" height="{inset}" href="{_data_uri(spec[mode])}" '
+            f'width="{inset}" height="{inset}" href="{_data_uri(spec["file"])}" '
             f'preserveAspectRatio="xMidYMid meet"/>')
 
     return bg.format(spec["brand"]) + _fitted(spec, x + 11, y + 11, 26, "#ffffff")
@@ -225,7 +207,7 @@ def banner(t, mode):
     o.append(text(0, 84, "Ridhun Gujja", size=38, fill=t["text"], weight=600, spacing="-0.8"))
     o.append(text(2, 112, "empirical finance · econometrics · python", size=15, fill=t["muted"]))
     o.append(f'<line x1="2" y1="134" x2="330" y2="134" stroke="{t["rule"]}" stroke-width="1"/>')
-    o.append(text(2, 158, "high school student", size=12.5, fill=t["muted"], family=MONO))
+    o.append(text(2, 158, "High school student", size=12.5, fill=t["muted"], family=MONO))
     o.append(text(2, 177, "econometrics intern · Wilmington, DE", size=12.5, fill=t["faint"], family=MONO))
 
     # scatter panel
@@ -334,7 +316,7 @@ def emit_tiles():
                        family=MONO, anchor="middle")
             )
             (TILES / f"{slug(label)}-{mode}.svg").write_text(
-                svg(round(w), TILE, body), encoding="utf-8")
+                svg(round(w) + TILE_PAD, TILE, body), encoding="utf-8")
         written.append(label)
     print(f"wrote {len(written)*2} tiles in assets/tiles/")
 
@@ -444,7 +426,6 @@ def spotify_card(track, t):
     """
     W, H = 432, 96
     art = 68
-    t = {"text": SPOTIFY_TEXT, "muted": SPOTIFY_MUTED, "faint": SPOTIFY_MUTED}
     o = [f'<rect x="0.5" y="0.5" width="{W-1}" height="{H-1}" rx="12" '
          f'fill="{SPOTIFY_BG}" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>']
 
@@ -452,24 +433,38 @@ def spotify_card(track, t):
     o.append(f'<image x="14" y="14" width="{art}" height="{art}" href="{track["art"]}" '
              f'clip-path="url(#c)" preserveAspectRatio="xMidYMid slice"/>')
 
-    o.append(text(W - 16, 30, "SPOTIFY", size=9, fill=t["faint"], family=MONO,
-                  spacing="1.6", anchor="end"))
-
     title = track["title"]
-    if len(title) > 26:
-        title = title[:25].rstrip() + "…"
-    o.append(text(96, 44, title, size=15, fill=t["text"], weight=600))
-    o.append(text(96, 63, track["artist"], size=12.5, fill=t["muted"]))
+    if len(title) > 24:
+        title = title[:23].rstrip() + "\u2026"
+    o.append(text(96, 39, title, size=15, fill=SPOTIFY_TEXT, weight=600))
+    o.append(text(96, 57, track["artist"], size=12.5, fill=SPOTIFY_MUTED))
+    o.append(f'<circle cx="99.5" cy="71" r="3.5" fill="{SPOTIFY_GREEN}"/>')
+    o.append(text(109, 75, f'from {track["playlist"]}', size=10.5,
+                  fill=SPOTIFY_MUTED, family=MONO))
 
-    for i in range(5):
-        x = 96 + i * 6.5
+    # Right-hand visualiser. SMIL is the only animation GitHub's image proxy
+    # passes through, so the bars are keyframed rather than scripted.
+    bars = [
+        (10, 34, 14, 40, 12), (30, 12, 38, 18, 26), (18, 40, 10, 30, 16),
+        (36, 16, 28, 12, 34), (12, 28, 40, 20, 10), (26, 38, 16, 34, 22),
+        (40, 14, 24, 38, 18), (16, 30, 12, 26, 40), (22, 18, 36, 14, 28),
+    ]
+    base = 72
+    for i, vals in enumerate(bars):
+        x = 330 + i * 8.6
+        hs = ",".join(str(v) for v in (*vals, vals[0]))
+        ys = ",".join(str(base - v) for v in (*vals, vals[0]))
         o.append(
-            f'<rect x="{x:.1f}" y="72" width="3.2" height="10" rx="1.6" fill="{SPOTIFY_GREEN}">'
-            f'<animate attributeName="height" values="4;11;6;12;4" dur="1.05s" '
-            f'begin="-{i*0.19:.2f}s" repeatCount="indefinite"/>'
-            f'<animate attributeName="y" values="78;71;76;70;78" dur="1.05s" '
-            f'begin="-{i*0.19:.2f}s" repeatCount="indefinite"/></rect>')
-    o.append(text(96 + 5 * 6.5 + 8, 81, "on repeat", size=10.5, fill=t["faint"], family=MONO))
+            f'<rect x="{x:.1f}" y="{base-vals[0]}" width="4.6" height="{vals[0]}" rx="2.3" '
+            f'fill="{SPOTIFY_GREEN}" opacity="0.92">'
+            f'<animate attributeName="height" values="{hs}" dur="1.6s" '
+            f'begin="-{i*0.17:.2f}s" repeatCount="indefinite" calcMode="spline" '
+            f'keySplines="0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1" '
+            f'keyTimes="0;0.2;0.4;0.6;0.8;1"/>'
+            f'<animate attributeName="y" values="{ys}" dur="1.6s" '
+            f'begin="-{i*0.17:.2f}s" repeatCount="indefinite" calcMode="spline" '
+            f'keySplines="0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1" '
+            f'keyTimes="0;0.2;0.4;0.6;0.8;1"/></rect>')
     return svg(W, H, "\n".join(o))
 
 

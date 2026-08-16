@@ -70,8 +70,8 @@
  },
  "Matplotlib": {
   "kind": "inset",
-  "light": "matplotlib.svg",
-  "dark": "matplotlib.svg",
+  "file": "matplotlib.svg",
+  "plate": "#242938",
   "same": true
  },
  "React": {
@@ -137,15 +137,15 @@
   "same": false
  },
  "statsmodels": {
-  "kind": "wordmark",
-  "file": "statsmodels-wordmark.svg",
-  "viewBox": "0 0 1754.6163 286.17656",
+  "kind": "inset",
+  "file": "statsmodels.svg",
+  "plate": "#F4F2ED",
   "same": true
  },
  "Stata": {
-  "kind": "wordmark",
-  "file": "stata-wordmark.svg",
-  "viewBox": "0 0 415.27 95.89",
+  "kind": "inset",
+  "file": "stata.png",
+  "plate": "#FFFFFF",
   "same": true
  }
 }

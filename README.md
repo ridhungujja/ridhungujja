@@ -1,6 +1,6 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/banner-dark.svg">
-  <img alt="Ridhun Gujja — empirical finance, econometrics, python. High school student and econometrics intern in Wilmington, DE." src="assets/banner-light.svg" width="880">
+  <img alt="Ridhun Gujja. Empirical finance, econometrics, python. High school student and econometrics intern in Wilmington, DE." src="assets/banner-light.svg" width="880">
 </picture>
 
 <picture>
@@ -8,48 +8,52 @@
   <img alt="Local time in Wilmington, DE" src="https://raw.githubusercontent.com/ridhungujja/ridhungujja/clock-output/clock-light.svg" width="220">
 </picture>
 
-I'm a high school student working on empirical finance questions — mostly the kind
-where the interesting part is the identification, not the model. I write Python for
-research and TypeScript for the things I wish existed.
+I'm a high school student working on empirical finance questions, mostly the kind
+where the interesting part is the identification rather than the model. I write
+Python for research and TypeScript for the things I wish existed.
 
 ## Currently
 
-- Building **[Podium](https://github.com/ridhungujja/podium)** — instant judge-style feedback on extemp speeches
-- Finishing the writeup for **[PE Firm Persistence](https://github.com/ridhungujja/pe-firm-persistence)**, on whether private equity returns carry across funds
-- Running my **ISEF project**: a 4×5 factorial study of whether *how a prompt is phrased* — neutral, urgent, authority-appealing, or emotionally loaded — changes how often a language model hallucinates, holding the actual question constant across five models with different alignment regimes
-- Open to research assistant work in empirical finance or econometrics
-
-## Selected work
-
-### [PE Firm Persistence](https://github.com/ridhungujja/pe-firm-persistence) · Python
+**[PE Firm Persistence](https://github.com/ridhungujja/pe-firm-persistence)** · Python
 
 Do good private equity funds predict good successors? Pension funds allocate billions
-on the assumption that they do. I test it on CalPERS' legally-mandated quarterly
-disclosures — 462 published rows down to 65 mature, adjacent fund pairs — regressing
-log TVPI on the predecessor fund's, with vintage fixed effects and errors clustered
-on the fund family.
+assuming they do. I regress log TVPI on the predecessor fund's across CalPERS'
+legally mandated quarterly disclosures, with vintage fixed effects, errors clustered
+on the fund family, and a wild cluster bootstrap alongside the analytic p-value. The
+462 published rows reduce to 65 mature, adjacent fund pairs.
 
 ```
 β = 0.214    SE 0.138    95% CI [−0.057, 0.485]
 p = 0.121    wild cluster bootstrap p = 0.187    n = 65
 ```
 
-The interval contains zero. On this data, persistence can't be told apart from luck —
-and the sample dies at 65 pairs for reasons worth more than the coefficient.
+The interval contains zero, so on this data persistence cannot be told apart from
+luck. The sample dies at 65 pairs for reasons worth more than the coefficient.
 
-### [Forma](https://github.com/ridhungujja/forma) · JavaScript
+**[Forma](https://github.com/ridhungujja/forma)** · JavaScript
 
 A Chrome extension that restructures PDFs, DOCX and slide decks into clean Markdown
-*before* they upload to Claude. Claude's native PDF pipeline renders every page as an
-image as well as extracting its text, so a large share of the token cost is a vision
-tax that a clean text upload never pays. Forma removes it locally — no document
-content ever leaves the browser tab.
+before they upload to Claude. Claude's native PDF pipeline rasterises every page as
+well as extracting its text, so a large share of the token cost is a vision tax that
+a clean text upload never pays. Parsing runs entirely inside the browser tab, so no
+document content leaves the device.
 
-### [Podium](https://github.com/ridhungujja/podium) · TypeScript
+**[Podium](https://github.com/ridhungujja/podium)** · TypeScript
 
-Draw a question, prep, speak, get structured feedback on structure, content and
-delivery in under a minute. Built for high school extempers without a coach.
-Next.js 14 · Tailwind · Framer Motion.
+Draw a question, prep, speak, and get judge-style feedback on structure, content and
+delivery in under a minute, with progress tracked across sessions. Built for high
+school extempers without a coach. Next.js 14 App Router, Tailwind and Framer Motion
+over a token-driven design system.
+
+**ISEF study** · Python
+
+Running a 4×5 factorial study on whether how you phrase a prompt changes how often a
+language model hallucinates. Roughly 2,000 stateless completions at fixed temperature
+across GPT, Claude, Gemini, Grok and DeepSeek, scored for hallucination rate, factual
+accuracy and confidence calibration, analysed with χ² tests of independence and
+two-way ANOVA with post-hoc Tukey HSD.
+
+Open to research assistant work in empirical finance or econometrics.
 
 ## Stack
 
@@ -63,7 +67,7 @@ Next.js 14 · Tailwind · Framer Motion.
 
 **Software &amp; Tools**
 
-<a href="https://www.stata.com" title="Stata"><img src="assets/tiles/stata-light.svg" height="48" alt="Stata"></a><a href="https://git-scm.com" title="Git"><img src="assets/tiles/git-light.svg" height="48" alt="Git"></a><a href="https://github.com/ridhungujja" title="GitHub"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/tiles/github-dark.svg"><img src="assets/tiles/github-light.svg" height="48" alt="GitHub"></picture></a><a href="https://claude.com/claude-code" title="Claude Code"><img src="assets/tiles/claude-code-light.svg" height="48" alt="Claude Code"></a><a href="https://docs.pytest.org" title="pytest"><img src="assets/tiles/pytest-light.svg" height="48" alt="pytest"></a><a href="https://github.com/jsvine/pdfplumber" title="pdfplumber"><img src="assets/tiles/pdfplumber-light.svg" height="48" alt="pdfplumber"></a>
+<a href="https://www.stata.com" title="Stata"><img src="assets/tiles/stata-light.svg" height="48" alt="Stata"></a><a href="https://git-scm.com" title="Git"><img src="assets/tiles/git-light.svg" height="48" alt="Git"></a><a href="https://github.com/ridhungujja" title="GitHub"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/tiles/github-dark.svg"><img src="assets/tiles/github-light.svg" height="48" alt="GitHub"></picture></a><a href="https://claude.com/claude-code" title="Claude Code"><img src="assets/tiles/claude-code-light.svg" height="48" alt="Claude Code"></a><a href="https://docs.pytest.org" title="pytest"><img src="assets/tiles/pytest-light.svg" height="48" alt="pytest"></a>
 
 ## By the numbers
 
@@ -79,13 +83,11 @@ Next.js 14 · Tailwind · Framer Motion.
 
 ## On repeat
 
-<a href="https://open.spotify.com/track/1zzejMGRYKP5XOa3FmzXfa"><img alt="Katchi Sera by Sai Abhyankkar" src="assets/spotify-1.svg" width="416"></a><a href="https://open.spotify.com/track/7H7NyZ3G075GqPx2evsfeb"><img alt="Chamber Of Reflection by Mac DeMarco" src="assets/spotify-2.svg" width="416"></a>
-
-<sub>Covers and titles pulled from Spotify · out of <a href="https://open.spotify.com/playlist/0v23S8pWmoUcxv1chc8kzh">cash curious 💰💸</a></sub>
+<a href="https://open.spotify.com/track/1zzejMGRYKP5XOa3FmzXfa"><img alt="Katchi Sera by Sai Abhyankkar, from southies" src="assets/spotify-1.svg" width="416"></a><a href="https://open.spotify.com/track/7H7NyZ3G075GqPx2evsfeb"><img alt="Chamber Of Reflection by Mac DeMarco, from cash curious 💰💸" src="assets/spotify-2.svg" width="416"></a>
 
 ## Elsewhere
 
-<a href="mailto:ridhung@gmail.com" title="Gmail"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/tiles/gmail-dark.svg"><img src="assets/tiles/gmail-light.svg" height="48" alt="Gmail"></picture></a><a href="https://github.com/ridhungujja" title="GitHub"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/tiles/github-dark.svg"><img src="assets/tiles/github-light.svg" height="48" alt="GitHub"></picture></a><a href="https://www.linkedin.com/in/ridhungujja/" title="LinkedIn"><img src="assets/tiles/linkedin-light.svg" height="48" alt="LinkedIn"></a><a href="https://www.instagram.com/ridhungujja/" title="Instagram"><img src="assets/tiles/instagram-light.svg" height="48" alt="Instagram"></a><a href="https://open.spotify.com/playlist/0v23S8pWmoUcxv1chc8kzh" title="Spotify"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/tiles/spotify-dark.svg"><img src="assets/tiles/spotify-light.svg" height="48" alt="Spotify"></picture></a>
+<a href="mailto:ridhung@gmail.com" title="Gmail"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/tiles/gmail-dark.svg"><img src="assets/tiles/gmail-light.svg" height="48" alt="Gmail"></picture></a><a href="https://github.com/ridhungujja" title="GitHub"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/tiles/github-dark.svg"><img src="assets/tiles/github-light.svg" height="48" alt="GitHub"></picture></a><a href="https://www.linkedin.com/in/ridhungujja/" title="LinkedIn"><img src="assets/tiles/linkedin-light.svg" height="48" alt="LinkedIn"></a><a href="https://www.instagram.com/ridhungujja/" title="Instagram"><img src="assets/tiles/instagram-light.svg" height="48" alt="Instagram"></a><a href="https://open.spotify.com/user/31r66silw2padp74yudatltdy4gm" title="Spotify"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/tiles/spotify-dark.svg"><img src="assets/tiles/spotify-light.svg" height="48" alt="Spotify"></picture></a>
 
 <a href="https://www.buymeacoffee.com/ridhungujja">
   <img alt="Pickleball + Eats" height="46" src="assets/bmc-button.svg">

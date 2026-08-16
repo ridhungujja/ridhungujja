@@ -52,14 +52,17 @@ ICONS = {
     "LinkedIn": ("skill", "LinkedIn"),
     "Instagram": ("skill", "Instagram"),
     "Spotify": ("skill", "Spotify"),
-    # No icon set carries these two, so we take the vendor's own wordmark. Both
-    # are dark-inked, so they sit on a light plate in either theme.
-    # pdfplumber has no logo anywhere and stays a text plate.
-    "statsmodels": ("wordmark", "https://raw.githubusercontent.com/statsmodels/"
-                                "statsmodels/main/docs/source/images/"
-                                "statsmodels-logo-v2-horizontal.svg"),
-    "Stata": ("wordmark", "https://www.stata.com/includes/images/stata-logo-blue.svg"),
+    # No icon set carries these two. Both are square marks rather than tiles, so
+    # they get a plate of their own to match the rest of the strip.
+    "statsmodels": ("svgart", "https://www.statsmodels.org/stable/_images/"
+                              "statsmodels-logo-v2-no-text.svg"),
+    "Stata": ("raster", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSH_"
+                        "8xa4FdiSV7T03dHiaz5nCXYjsB0cfLe4d9el_12lST7wfSrpZW2LVQ&s=10"),
 }
+
+# Which ground a non-tile mark sits on. Matplotlib's is drawn in white and needs
+# a dark plate; the other two are dark-inked and need a light one.
+PLATES = {"Matplotlib": "#242938", "statsmodels": "#F4F2ED", "Stata": "#FFFFFF"}
 
 # skill-icons artwork already ships its own tile background. The monochrome
 # simple-icons glyphs don't, so each gets its brand colour behind a white mark —
@@ -146,23 +149,30 @@ def main():
                 print(f"  !! no artwork for {label}")
                 continue
             (ICON_DIR / f"{slug}.svg").write_text(body, encoding="utf-8")
-            manifest[label] = {"kind": "inset", "light": f"{slug}.svg",
-                               "dark": f"{slug}.svg", "same": True}
+            manifest[label] = {"kind": "inset", "file": f"{slug}.svg",
+                               "plate": PLATES.get(label, "#242938"), "same": True}
 
-        elif source == "wordmark":
-            body = get(slug)
-            if not body:
-                print(f"  !! no wordmark for {label}")
-                continue
-            name = re.sub(r"[^a-z0-9]+", "-", label.lower()).strip("-") + "-wordmark.svg"
-            (ICON_DIR / name).write_text(body, encoding="utf-8")
-            box = re.search(r'viewBox="([^"]+)"', body)
-            manifest[label] = {
-                "kind": "wordmark",
-                "file": name,
-                "viewBox": box.group(1) if box else "0 0 100 24",
-                "same": True,
-            }
+        elif source in ("svgart", "raster"):
+            name = re.sub(r"[^a-z0-9]+", "-", label.lower()).strip("-")
+            if source == "svgart":
+                body = get(slug)
+                if not body:
+                    print(f"  !! no artwork for {label}")
+                    continue
+                name += ".svg"
+                (ICON_DIR / name).write_text(body, encoding="utf-8")
+            else:
+                try:
+                    raw = urllib.request.urlopen(urllib.request.Request(
+                        slug, headers={"User-Agent": "ridhungujja-profile-readme"}),
+                        timeout=30).read()
+                except (urllib.error.HTTPError, urllib.error.URLError):
+                    print(f"  !! no artwork for {label}")
+                    continue
+                name += ".png"
+                (ICON_DIR / name).write_bytes(raw)
+            manifest[label] = {"kind": "inset", "file": name,
+                               "plate": PLATES.get(label, "#F4F2ED"), "same": True}
 
         else:  # simple-icons
             body = get(SIMPLE.format(slug))
@@ -200,8 +210,11 @@ def main():
 # titles, artists and cover art without any credential at all.
 # ---------------------------------------------------------------------------
 
-TRACKS = ["1zzejMGRYKP5XOa3FmzXfa", "7H7NyZ3G075GqPx2evsfeb"]
-PLAYLIST = "0v23S8pWmoUcxv1chc8kzh"
+# one track standing in for each playlist
+TRACKS = [
+    ("1zzejMGRYKP5XOa3FmzXfa", "0IUViMbUBPffUXQeDOyzDU"),  # southies
+    ("7H7NyZ3G075GqPx2evsfeb", "0v23S8pWmoUcxv1chc8kzh"),  # cash curious
+]
 
 
 def _artist(track_id):
@@ -218,8 +231,8 @@ def _artist(track_id):
 
 
 def fetch_spotify():
-    out = {"tracks": [], "playlist": {}}
-    for tid in TRACKS:
+    out = {"tracks": []}
+    for tid, plid in TRACKS:
         meta = get(f"https://open.spotify.com/oembed?url=https://open.spotify.com/track/{tid}")
         if not meta:
             print(f"  !! no Spotify metadata for {tid}")
@@ -230,18 +243,18 @@ def fetch_spotify():
                                    headers={"User-Agent": "ridhungujja-profile-readme"}),
             timeout=30).read()
         title = re.split(r"\s+-\s+From\b", meta["title"])[0].strip()
+        pl = get("https://open.spotify.com/oembed?url="
+                 f"https://open.spotify.com/playlist/{plid}")
         out["tracks"].append({
             "id": tid,
             "title": title,
             "artist": _artist(tid),
+            "playlist": json.loads(pl)["title"] if pl else "",
+            "playlist_id": plid,
             "art": "data:image/jpeg;base64," + base64.b64encode(art).decode(),
         })
-        print(f"  {title} — {out['tracks'][-1]['artist']}")
-
-    pl = get(f"https://open.spotify.com/oembed?url=https://open.spotify.com/playlist/{PLAYLIST}")
-    if pl:
-        out["playlist"] = {"id": PLAYLIST, "title": json.loads(pl)["title"]}
-        print(f"  playlist: {out['playlist']['title']}")
+        t = out["tracks"][-1]
+        print(f"  {t['title']} / {t['artist']} / from {t['playlist']}")
 
     (ICON_DIR.parent / "spotify.json").write_text(json.dumps(out), encoding="utf-8")
 
