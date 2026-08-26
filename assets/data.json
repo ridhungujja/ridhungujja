@@ -7,24 +7,24 @@
    "color": "#3572A5"
   },
   {
+   "name": "HTML",
+   "bytes": 155740,
+   "color": "#e34c26"
+  },
+  {
    "name": "TypeScript",
    "bytes": 144503,
    "color": "#3178c6"
   },
   {
    "name": "JavaScript",
-   "bytes": 91797,
+   "bytes": 102930,
    "color": "#f1e05a"
   },
   {
    "name": "CSS",
-   "bytes": 33929,
+   "bytes": 67716,
    "color": "#663399"
-  },
-  {
-   "name": "HTML",
-   "bytes": 19343,
-   "color": "#e34c26"
   },
   {
    "name": "Shell",
@@ -32,13 +32,13 @@
    "color": "#89e051"
   }
  ],
- "projects": 3,
+ "projects": 4,
  "stats": {
-  "contributions": 142,
-  "commits": 130,
+  "contributions": 144,
+  "commits": 131,
   "repos": 4,
   "stars": 2,
-  "bytes": 599874
+  "bytes": 781191
  },
  "weeks": [
   [
@@ -1983,7 +1983,7 @@
    },
    {
     "date": "2026-08-26",
-    "count": 0,
+    "count": 2,
     "weekday": 3
    }
   ]
