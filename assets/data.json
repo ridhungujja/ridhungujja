@@ -8,7 +8,7 @@
   },
   {
    "name": "HTML",
-   "bytes": 156956,
+   "bytes": 166851,
    "color": "#e34c26"
   },
   {
@@ -18,12 +18,12 @@
   },
   {
    "name": "JavaScript",
-   "bytes": 102561,
+   "bytes": 95551,
    "color": "#f1e05a"
   },
   {
    "name": "CSS",
-   "bytes": 67783,
+   "bytes": 78597,
    "color": "#663399"
   },
   {
@@ -38,7 +38,7 @@
   "commits": 131,
   "repos": 4,
   "stars": 2,
-  "bytes": 782105
+  "bytes": 795804
  },
  "weeks": [
   [
